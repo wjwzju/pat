@@ -1,47 +1,54 @@
-#include <iostream>
+#include<cstdio>
+#include<cstdlib>
+
+using namespace std;
+
+const int MAXI = 101;
 
 struct TNode{
-	int lchild;
-	int rsibling;
-	int level;
-};
+    int lchild;
+    int rsibling;
+    int level;
+    TNode(){
+        lchild = rsibling = -1;
+        level = 0;
+    }
+}Node[MAXI];
 
 int main(){
-	int n, m, i, j, id, k;
-	int a[100], l[101] = {0};
-	struct TNode t[101];
-	t[1].level = 1;
-	scanf("%d %d", &n, &m);
-	for(i = 1; i <= n; i++){
-		t[i].lchild = -1;
-		t[i].rsibling = -1;
-	}
-	for(i = 1; i <= m; i++){
-		scanf("%d %d", &id, &k);
-		for(j = 0; j < k; j++){
-			scanf("%d", &a[j]);
-		}
-		t[id].lchild = a[0];
-		t[a[0]].level = t[id].level + 1;
-		for(j = 0; j < k - 1; j++){
-			t[a[j]].rsibling = a[j + 1];
-			t[a[j + 1]].level = t[a[j]].level;
-		}
-	}
-
-	for(i = 1; i <= n; i++){
-		//printf("%d %d %d %d\n", i, t[i].lchild, t[i].rsibling, t[i].level);
-		if(t[i].lchild == -1){
-			l[t[i].level]++;
-		}
-	}
-	printf("%d", l[1]);
-	int max_level = 1;
-	for(i = 1; i <= n; i++){
-		max_level = (max_level > t[i].level)? max_level: t[i].level;
-	}
-	for(i = 2; i <= max_level; i++){
-		printf(" %d", l[i]);
-	}
-	system("pause");
+    int N, M, K, i, j, id;
+    int idk[MAXI];
+    int count[MAXI] = {0};
+    scanf("%d %d", &N, &M);
+    for(i = 0; i < M; i++){
+        scanf("%d %d", &id, &K);
+        for(j = 0; j < K; j++){
+            scanf("%d", &idk[j]);
+        }
+        Node[id].lchild = idk[0];
+        for(j = K - 1; j > 0; j--){
+            Node[idk[j-1]].rsibling = idk[j];
+        }
+    }
+    int max_level = 0;
+    for(i = 1; i <= N; i++){
+        if(Node[i].lchild != -1){
+            Node[Node[i].lchild].level = Node[i].level + 1;
+            max_level = (max_level >= Node[i].level + 1)? max_level: Node[i].level + 1;
+        }
+        if(Node[i].rsibling != -1){
+            Node[Node[i].rsibling].level = Node[i].level;
+        }
+    }
+    for(i = 1; i <= N; i++){
+        if(Node[i].lchild == -1){
+            count[Node[i].level]++;
+        }
+    }
+    printf("%d", count[0]);
+    for(i = 1; i <= max_level; i++){
+        printf(" %d", count[i]);
+    }
+    //system("pause");
+    return 0;
 }
