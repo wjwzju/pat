@@ -25,13 +25,18 @@ int main(){
             p3[p1[i].exp + p2[j].exp] += p1[i].coe * p2[j].coe;
         }
     }
-    printf("%d", p3.size());
+    //要排除掉系数为0的项
+    printf("%d", p3.size() - p3.count(0));
     map<int, double>::iterator iter = p3.end();
     iter--;
     for(; iter != p3.begin(); iter--){
-        printf(" %d %.1lf", iter->first, iter->second);
+        if(iter->second){
+            printf(" %d %.1lf", iter->first, iter->second);
+        }
     }
     iter = p3.begin();
-    printf(" %d %.1lf", iter->first, iter->second);
+    if(iter->second){
+        printf(" %d %.1lf", iter->first, iter->second);
+    }
     return 0;
 }
